@@ -1,0 +1,19 @@
+<resources>
+
+    <string name="app_name">Shutdown</string>
+    
+    <string name="shutdown_title">Shutdown</string>
+    <string name="shutdown_msg">
+        The device will be shutdown in %s seconds.
+    </string>
+    
+    <string name="reboot">Reboot</string>
+    <string name="shutdownnow">Shutdown now</string>
+    <string name="checkroot">Checking root</string>
+    <string name="noroot">No root access</string>
+    
+    <string name="noroot_msg">
+        The device is not rooted. The shutdown only works on rooted devices. Contact your manufactory, and ask rooted devices.
+    </string>
+    
+</resources>

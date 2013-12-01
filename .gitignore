@@ -1,0 +1,6 @@
+.classpath
+*libs/
+*bin/
+*gen/
+gh-pages/*
+.settings/*
