@@ -48,20 +48,20 @@ public class SdActivity extends Activity {
 
         RootTools.debugMode = false;
 
-        SetShutdownView();
+        setShutdownView();
 
         // only truly startup when root allowed
         
         if (!RootTools.isRootAvailable()) {
             Log.w(TAG, "Root is not available");
-            SetNoRootView();
+            setNoRootView();
             return;
         }
         Log.v(TAG, "Root is available");
          
         if (!RootTools.isAccessGiven()) {
             Log.w(TAG, "Root is available but access is not given");
-            SetNoRootView();
+            setNoRootView();
             return;
         }
         Log.v(TAG, "Root access given");
@@ -72,7 +72,7 @@ public class SdActivity extends Activity {
 
     }
 
-    private void SetShutdownView() {
+    private void setShutdownView() {
         setContentView(R.layout.shutdown_layout);
 
         Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
@@ -106,7 +106,7 @@ public class SdActivity extends Activity {
         });
     }
 
-    private void SetNoRootView() {
+    private void setNoRootView() {
         setContentView(R.layout.noroot_layout);
         Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
         cancelBtn.setOnClickListener(new OnClickListener() {
