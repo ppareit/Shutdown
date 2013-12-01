@@ -19,7 +19,7 @@
             android:name="be.ppareit.shutdown.SdActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:noHistory="true"
+            android:noHistory="false"
             android:excludeFromRecents="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
