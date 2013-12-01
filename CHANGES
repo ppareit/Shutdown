@@ -1,0 +1,3 @@
+Version 1.1 (2013/12/01)
+    * Improve handling of SuperUser dialog
+    * Run root checking in a background thread

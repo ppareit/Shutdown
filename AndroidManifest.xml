@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="be.ppareit.shutdown"
-    android:versionCode="1"
-    android:versionName="001" >
+    android:versionCode="010100"
+    android:versionName="1.1" >
 
     <uses-sdk
         android:minSdkVersion="9"
