@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="emulate_shutdowns">false</bool>
+    <bool name="emulate_shutdowns">true</bool>
     <bool name="debug_notrooted">false</bool>
 </resources>

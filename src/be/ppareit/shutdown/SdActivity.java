@@ -2,6 +2,7 @@ package be.ppareit.shutdown;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -22,7 +23,10 @@ public class SdActivity extends Activity {
 
     static final String TAG = SdActivity.class.getSimpleName();
 
-    private CountDownTimer countdownTimer = new CountDownTimer(60000, 1000) {
+    private Button mRebootBtn;
+    private Button mShutdownBtn;
+
+    private CountDownTimer mCountdownTimer = new CountDownTimer(60000, 1000) {
         @Override
         public void onTick(long millisUntilFinished) {
             long seconds = millisUntilFinished / 1000;
@@ -41,6 +45,39 @@ public class SdActivity extends Activity {
         }
     };
 
+    private AsyncTask<Void, Void, Boolean> mRootCheckTask = new AsyncTask<Void, Void, Boolean>() {
+
+        protected void onPreExecute() {
+            Log.d(TAG, "Beginning the root checking task");
+            mRebootBtn.setText(R.string.checkroot);
+            mRebootBtn.setEnabled(false);
+            mShutdownBtn.setText(R.string.checkroot);
+            mShutdownBtn.setEnabled(false);
+        };
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Log.d(TAG, "Doing the rootchecking in the background");
+            return RootTools.isRootAvailable() && RootTools.isAccessGiven();
+        }
+
+        protected void onPostExecute(Boolean result) {
+            Log.d(TAG, "Finished root checking, result: " + result.toString());
+            if (result) {
+                mRebootBtn.setText(R.string.reboot);
+                mRebootBtn.setEnabled(true);
+                mShutdownBtn.setText(R.string.shutdownnow);
+                mShutdownBtn.setEnabled(true);
+                mCountdownTimer.start();
+            } else {
+                mRebootBtn.setText(R.string.noroot);
+                mShutdownBtn.setText(R.string.noroot);
+                setNoRootView();
+            }
+        };
+
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,57 +87,38 @@ public class SdActivity extends Activity {
 
         setShutdownView();
 
-        // only truly startup when root allowed
-        
-        if (!RootTools.isRootAvailable()) {
-            Log.w(TAG, "Root is not available");
-            setNoRootView();
-            return;
-        }
-        Log.v(TAG, "Root is available");
-         
-        if (!RootTools.isAccessGiven()) {
-            Log.w(TAG, "Root is available but access is not given");
-            setNoRootView();
-            return;
-        }
-        Log.v(TAG, "Root access given");
-        
-        // ok, everything is fine, give startup
-
-        countdownTimer.start();
+        mRootCheckTask.execute();
 
     }
 
     private void setShutdownView() {
         setContentView(R.layout.shutdown_layout);
 
-        Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
+        Button cancelBtn = findView(R.id.cancel_btn);
         cancelBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.v(TAG, "Cancel clicked");
-                countdownTimer.cancel();
-                finish();
+                doCancel();
             }
         });
 
-        Button rebootBtn = (Button) findViewById(R.id.reboot_btn);
-        rebootBtn.setOnClickListener(new OnClickListener() {
+        mRebootBtn = findView(R.id.reboot_btn);
+        mRebootBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.v(TAG, "Reboot clicked");
-                countdownTimer.cancel();
+                mCountdownTimer.cancel();
                 doReboot();
             }
         });
 
-        Button shutdownBtn = (Button) findViewById(R.id.shutdownnow_btn);
-        shutdownBtn.setOnClickListener(new OnClickListener() {
+        mShutdownBtn = findView(R.id.shutdownnow_btn);
+        mShutdownBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.v(TAG, "Shutdown clicked");
-                countdownTimer.cancel();
+                mCountdownTimer.cancel();
                 doShutdown();
             }
         });
@@ -108,22 +126,26 @@ public class SdActivity extends Activity {
 
     private void setNoRootView() {
         setContentView(R.layout.noroot_layout);
-        Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
+        Button cancelBtn = findView(R.id.cancel_btn);
         cancelBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.v(TAG, "Cancel clicked");
-                countdownTimer.cancel();
-                finish();
+                doCancel();
             }
         });
+    }
+
+    protected void doCancel() {
+        mRootCheckTask.cancel(true);
+        mCountdownTimer.cancel();
+        finish();
     }
 
     protected void doShutdown() {
         Log.v(TAG, "Shutting down the device");
         if (App.emulateShutdowns()) {
             Log.v(TAG, "Emulating a shutdown");
-
             return;
         }
         CommandCapture shutdownCommand = new CommandCapture(0, "reboot -p");
@@ -146,6 +168,11 @@ public class SdActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T extends View> T findView(int id) {
+        return (T) this.findViewById(id);
     }
 
 }
