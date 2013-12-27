@@ -58,6 +58,14 @@ public class SdActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... params) {
             Log.d(TAG, "Doing the rootchecking in the background");
+            if (App.debugNotRooted() == true) {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
             return RootTools.isRootAvailable() && RootTools.isAccessGiven();
         }
 
