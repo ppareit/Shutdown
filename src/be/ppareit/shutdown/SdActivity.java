@@ -23,6 +23,7 @@ public class SdActivity extends Activity {
 
     static final String TAG = SdActivity.class.getSimpleName();
 
+    private TextView mShutdownMsg;
     private Button mRebootBtn;
     private Button mShutdownBtn;
 
@@ -49,9 +50,8 @@ public class SdActivity extends Activity {
 
         protected void onPreExecute() {
             Log.d(TAG, "Beginning the root checking task");
-            mRebootBtn.setText(R.string.checkroot);
+            mShutdownMsg.setText(R.string.checkroot);
             mRebootBtn.setEnabled(false);
-            mShutdownBtn.setText(R.string.checkroot);
             mShutdownBtn.setEnabled(false);
         };
 
@@ -64,10 +64,9 @@ public class SdActivity extends Activity {
         protected void onPostExecute(Boolean result) {
             Log.d(TAG, "Finished root checking, result: " + result.toString());
             if (result) {
-                mRebootBtn.setText(R.string.reboot);
                 mRebootBtn.setEnabled(true);
-                mShutdownBtn.setText(R.string.shutdownnow);
                 mShutdownBtn.setEnabled(true);
+                mShutdownMsg.setText(R.string.shutdown_msg);
                 mCountdownTimer.start();
             } else {
                 mRebootBtn.setText(R.string.noroot);
@@ -93,6 +92,8 @@ public class SdActivity extends Activity {
 
     private void setShutdownView() {
         setContentView(R.layout.shutdown_layout);
+
+        mShutdownMsg = findView(R.id.shutdown_msg);
 
         Button cancelBtn = findView(R.id.cancel_btn);
         cancelBtn.setOnClickListener(new OnClickListener() {
