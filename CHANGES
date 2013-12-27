@@ -1,3 +1,8 @@
+Version 1.2 (2013/12/27)
+    * Holo the user interface
+    * Improve the UX when checking root
+    * Fix bugs
+
 Version 1.1 (2013/12/01)
     * Improve handling of SuperUser dialog
     * Run root checking in a background thread
