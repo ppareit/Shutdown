@@ -34,7 +34,7 @@ public class SdActivity extends Activity {
             Resources res = getResources();
             String shutdownMessage = (String) res.getText(R.string.shutdown_msg);
             String formatedShutdownMString = String.format(shutdownMessage, seconds);
-            TextView msgView = (TextView) findViewById(R.id.shutdown_msg);
+            TextView msgView = findView(R.id.shutdown_msg);
             msgView.setText(formatedShutdownMString);
         }
 
