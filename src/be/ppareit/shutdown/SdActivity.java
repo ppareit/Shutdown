@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -155,6 +156,8 @@ public class SdActivity extends Activity {
         Log.v(TAG, "Shutting down the device");
         if (App.emulateShutdowns()) {
             Log.v(TAG, "Emulating a shutdown");
+            Toast.makeText(this, "Emulating a shutdown", Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
         CommandCapture shutdownCommand = new CommandCapture(0, "reboot -p");
@@ -169,6 +172,8 @@ public class SdActivity extends Activity {
         Log.v(TAG, "Rebooting the device");
         if (App.emulateShutdowns()) {
             Log.v(TAG, "Emulating a reboot");
+            Toast.makeText(this, "Emulating a reboot", Toast.LENGTH_LONG).show();
+            finish();
             return;
         }
         CommandCapture rebootCommand = new CommandCapture(0, "reboot");
