@@ -160,7 +160,7 @@ public class SdActivity extends Activity {
             finish();
             return;
         }
-        CommandCapture shutdownCommand = new CommandCapture(0, "reboot -p");
+        CommandCapture shutdownCommand = new CommandCapture(0, "sync; sleep 1; reboot -p");
         try {
             RootTools.getShell(true).add(shutdownCommand);
         } catch (Exception e) {
@@ -176,7 +176,7 @@ public class SdActivity extends Activity {
             finish();
             return;
         }
-        CommandCapture rebootCommand = new CommandCapture(0, "reboot");
+        CommandCapture rebootCommand = new CommandCapture(0, "sync; sleep 1; reboot");
         try {
             RootTools.getShell(true).add(rebootCommand);
         } catch (Exception e) {
