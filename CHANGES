@@ -1,3 +1,7 @@
+Version 1.2.1 (2014/07/06)
+    * Sync data on reboot/shutdown
+    * Trim apk with proguard
+
 Version 1.2 (2013/12/27)
     * Holo the user interface
     * Improve the UX when checking root
