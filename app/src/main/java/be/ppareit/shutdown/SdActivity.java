@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stericson.RootShell.execution.Command;
 import com.stericson.RootTools.RootTools;
-import com.stericson.RootTools.execution.CommandCapture;
 
 // See if I can call a broadcast: ACTION_SYNC
 // http://developer.android.com/reference/android/content/Intent.html#ACTION_SYNC
@@ -160,7 +160,7 @@ public class SdActivity extends Activity {
             finish();
             return;
         }
-        CommandCapture shutdownCommand = new CommandCapture(0, "sync; sleep 1; reboot -p");
+        Command shutdownCommand = new Command(0, "sync", "sleep 1", "reboot -p");
         try {
             RootTools.getShell(true).add(shutdownCommand);
         } catch (Exception e) {
@@ -176,7 +176,7 @@ public class SdActivity extends Activity {
             finish();
             return;
         }
-        CommandCapture rebootCommand = new CommandCapture(0, "sync; sleep 1; reboot");
+        Command rebootCommand = new Command(0, "sync", "sleep 1",  "reboot");
         try {
             RootTools.getShell(true).add(rebootCommand);
         } catch (Exception e) {
