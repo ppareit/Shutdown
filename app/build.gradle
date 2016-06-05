@@ -1,0 +1,19 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "be.ppareit.shutdown"
+        minSdkVersion 11
+        targetSdkVersion 19
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles 'proguard-project.txt'
+        }
+    }
+}
