@@ -3,6 +3,8 @@ package be.ppareit.shutdown;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
@@ -34,6 +36,34 @@ public class App extends Application {
         if (sContext == null)
             Log.e(TAG, "Global context not set");
         return sContext;
+    }
+
+    static public boolean isSystemApp() {
+        try {
+            Context context = getAppContext();
+            PackageManager pm = context.getPackageManager();
+            String packageName = context.getPackageName();
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+            // First check if it is preloaded.
+            // If yes then check if it is System app or not.
+            if (ai == null || (ai.flags & (ApplicationInfo.FLAG_SYSTEM | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) == 0)
+                return false;
+            Log.v(TAG, "Installed as system application");
+            // get my app signature
+            PackageInfo appInfo = pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES);
+            if (appInfo == null && appInfo.signatures == null)
+                return false;
+            // get framework signature
+            PackageInfo sysInfo = pm.getPackageInfo("android", PackageManager.GET_SIGNATURES);
+            if (sysInfo == null && sysInfo.signatures == null)
+                return false;
+            // compare both signatures
+            boolean systemApp = sysInfo.signatures[0].equals(appInfo.signatures[0]);
+            if (!systemApp) Log.v(TAG, "Incorrect signature as system application");
+            return systemApp;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
     /**

@@ -1,10 +1,12 @@
 package be.ppareit.shutdown;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,7 +56,7 @@ public class SdActivity extends Activity {
             mShutdownMsg.setText(R.string.checkroot);
             mRebootBtn.setEnabled(false);
             mShutdownBtn.setEnabled(false);
-        };
+        }
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -82,7 +84,7 @@ public class SdActivity extends Activity {
                 mShutdownBtn.setText(R.string.noroot);
                 setNoRootView();
             }
-        };
+        }
 
     };
 
@@ -160,6 +162,11 @@ public class SdActivity extends Activity {
             finish();
             return;
         }
+        if (App.isSystemApp()) {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            pm.reboot("-p");
+            Log.e(TAG, "Failed to shutdown as system app, fallback to root method");
+        }
         Command shutdownCommand = new Command(0, "sync", "sleep 1", "reboot -p");
         try {
             RootTools.getShell(true).add(shutdownCommand);
@@ -176,7 +183,12 @@ public class SdActivity extends Activity {
             finish();
             return;
         }
-        Command rebootCommand = new Command(0, "sync", "sleep 1",  "reboot");
+        if (App.isSystemApp()) {
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            pm.reboot("");
+            Log.e(TAG, "Failed to reboot as system app, fallback to root method");
+        }
+        Command rebootCommand = new Command(0, "sync", "sleep 1", "reboot");
         try {
             RootTools.getShell(true).add(rebootCommand);
         } catch (Exception e) {
