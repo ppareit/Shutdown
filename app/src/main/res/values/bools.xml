@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    // following flag will only work in debug mode
     <bool name="emulate_shutdowns">true</bool>
+    // following flag will only work in debug mode
     <bool name="debug_notrooted">false</bool>
 </resources>

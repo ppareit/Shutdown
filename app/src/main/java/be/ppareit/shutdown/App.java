@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -35,18 +36,26 @@ public class App extends Application {
         return sContext;
     }
 
+    /**
+     * In release this will always return false, the expected behavior.
+     *
+     * @return true when debugging and when flag to emulate shutdowns is set
+     */
     static public boolean emulateShutdowns() {
         Context context = App.getAppContext();
         Resources res = context.getResources();
-        return res.getBoolean(R.bool.emulate_shutdowns);
+        return BuildConfig.DEBUG && res.getBoolean(R.bool.emulate_shutdowns);
     }
 
+    /**
+     * In release this will always return false, the expected behavior.
+     *
+     * @return true when debugging and when flag to emulate no root is set
+     */
     static public boolean debugNotRooted() {
         Context context = getAppContext();
         Resources res = context.getResources();
-        final boolean notrooted = res.getBoolean(R.bool.debug_notrooted);
-        Log.d(TAG, "Setting debugstate of notrooted to: " + Boolean.toString(notrooted));
-        return notrooted;
+        return BuildConfig.DEBUG && res.getBoolean(R.bool.debug_notrooted);
     }
 
     /**
